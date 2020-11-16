@@ -1,0 +1,248 @@
+# R-programming-Basic probability-Project
+#Question 01
+## Normal Distribution Assumptions
+## 1.	The number is the trail is fixed
+## 2.	Each trail has the same possible outcomes
+## 3.	The trail has independent
+## 4.	The probability of success is the same in each trial
+
+## a. Probability Less than 77.0 when mean =77.0 and SD=3.4
+pnorm(72.6,77.0,3.4,lower.tail = T)
+## b.  Probability greater  than 88.5
+pnorm(88.5,77.0,3.4,lower.tail = F)
+## c. Probability between 81 and 84
+pnorm(84,77.0,3.4,lower.tail = T)-pnorm(81,77.0,3.4,lower.tail = T)
+## d. Probability between 56 and 92
+pnorm(92,77.0,3.4,lower.tail = T)-pnorm(56,77.0,3.4,lower.tail = T)
+
+# Question 02.	In a car race, the finishing times are normally distributed with
+## mean 145 minutes and standard deviation of 12 minutes.
+## a. percentage of car racers whose finish time is between 130 and 160 minutes
+pro1a<-(pnorm(160,145,12,lower.tail = T)-pnorm(130,145,12,lower.tail = T))
+pro1a
+precentage<-pro1a*100
+precentage
+## b. Find percentage of car racers whose finish time is less than 130 minutes.
+pro1b<-pnorm(130,145,12,lower.tail = T)
+pro1b
+percentage2<-pro1b*100
+percentage2
+
+# Question 03 
+## The Probability of question is  false = 1/2
+## The Probability of question is true = 1/2
+## By using Binomial distribution 
+#a.probability that the student got first five questions correct
+prob3a<-pbinom(5,15,0.5)
+prob3a
+## b. probability that the student got five questions correct
+prob3b<-dbinom(5,15,0.5)
+prob3b
+
+#Question 04 
+## 68% of the students marks fall between 35 and 42 
+# From Empricile Rules approximately 68% of the observations should fall within 1 standard deviation from the mean.So, we can write
+sd<-(42-35)/2
+sd
+mean<-42-sd
+mean
+
+# Question05
+## Probability of the class cleared both exams 0.3
+## Probability of the class cleared first exams 0.55
+## p(Cleared Second exam|Cleared First exam )<-P(cleared both exams)/(P(cleared first exams))
+pro5<-0.3/0.55
+pro5
+
+# Question06
+## Probability of homes have a TV is 0.82
+## Probability of homes have a TV and DVD player is 0.62
+## P(has a DVD player|home has a TV ) =P(homes have a TV and DVD player)/P(homes have a TV)
+pro6<-0.62/0.82
+pro6
+
+# Question07
+# Probability of getting head and tail is 0.5
+# a. Probability of all three heads
+Prob_of_allthree_head<-(1/2)^3
+Prob_of_allthree_head
+## b.	Exactly one head
+Prob_of_Exactly_onehead<-(factorial(3)/(factorial(2)*factorial(1)))*0.5*0.5^2
+Prob_of_Exactly_onehead
+## C. 
+## probability of getting at least two heads
+prob6c<-(factorial(3)/(factorial(2)*factorial(1)))*0.5^2*0.5 +(1/2)^3
+prob6c
+## P(Exactly one head|getting at-least two heads) = P(Getting exactly one head)/P(etting at least two heads)
+proba<-(Prob_of_Exactly_onehead)/prob
+
+# Question 8  mean =90 and sd=10  find the  P(x > 100)
+p8<-pnorm(100,90,10,lower.tail = F)
+p8
+
+# Qustion 9 
+## probability that the yellow M&M came from the 1994 bag
+## probability of given yellow M & M from 1994 bag is x1
+## probability of given yellow and green M & M is x2
+## But we know from the data P(x1)=0.5 
+## Also P(x1nx2)=0.2*0.2=0.4
+## P(x2)<-P(yellow from 1994)*P(green 1996)+P(green 1994)*P(yellow from 1996)=(0.2*0.2+0.1*0.14)=0.54
+## P(yellow M&M came from the 1994 bag|yellow and green M & M)=0.04/0.54
+## probability_that _the_yellow_M&M_came_from_the_1994bag<-0.0741
+# Question 09
+## a. Traget Mean ,SD & CV
+traketdata<-read.table(file.choose(),header=TRUE,sep=",")
+head(traketdata)
+summary(traketdata)
+attach(traketdata)
+## Mean of the stock price
+tragetClosestockpricemean<-mean(Close)
+
+## SD of the stock price
+traketClosestockprice_sd<-sd(Close)
+
+## b.  Walmart Mean ,SD & CV
+Walmartdata<-read.table(file.choose(),header=TRUE,sep=",")
+head(Walmartdata)
+summary(Walmartdata)
+attach(Walmartdata)
+## Mean of the stock price
+waClosestockpricemean<-mean(Close)
+## SD of the stock price
+waClosestockprice_sd<-sd(Close)
+
+## C.  The coefficient of variation 
+##CV of Traget
+
+CVtragetClosestockprice<-(tragetClosestockpricemean/traketClosestockprice_sd)
+##CV of Walmart
+CVwaClosestockprice<-waClosestockpricemean/waClosestockprice_sd
+
+
+## d.  Walmart CV its around 14.227 & TRAGET CV valuse around 7.302 
+## so CV of walmart> CV of TRAGET so walmart has high risk rathe than TRAGET
+## e..
+DJIAtdata<-read.table(file.choose(),header=TRUE,sep=",")
+head(DJIAtdata)
+attach(DJIAtdata)
+## Mean of the stock price
+DJIAClosestockpricemean<-mean(Close)
+## SD of the stock price
+DJIAClosestockprice_sd<-sd(Close)
+## CV of the stock price
+DJIACVClosestockprice<-(DJIAClosestockpricemean/DJIAClosestockprice_sd)
+##  Walmart CV its around 14.227,TRAGET CV valuse around 7.302  & DJIA CV valuse around 12.49 
+## so CV of walmart> CV of DJIA,CV of Traget so walmart has high risk rathe than DJIA
+# f..
+Holdings_mean <- 100*waClosestockpricemean
+Holdings_mean
+Holdings_sd <- 100*waClosestockprice_sd
+Holdings_sd
+# Question11
+library(dplyr)
+library(ggplot2)
+library(ggExtra)
+
+data<-read.table(file.choose(),header=T,sep=",")
+head(data)
+data<-data[,-c(13:15)]
+head(data)
+str(data)
+## In data type, we have more characteristic variable but we need to convert into a factor variable
+## Chane the characteristic variabl into a factor variable
+data$site<-as.factor(data$site)
+data$day<-as.factor(data$day)
+summary(data)
+## From summary we could see in  new_customer column and gross_sales column have some NA values so we need to remove those value
+## Missing data Replace by  related column median value
+data$new_customer[is.na(data$new_customer)]<-median(data$new_customer,na.rm=T)
+data$gross_sales [is.na(data$gross_sales )]<-median(data$gross_sales,na.rm=T)
+summary(data)
+#Cheack the sites type
+xtabs(~site,data)
+## The site has 6 different types of site from that I'm going to select three most viewed types site for further analysis
+#From that most visted site are  Pinnacle,Sortly and Acme 
+newdata<-data  %>% filter( site =='Pinnacle'| site =='Sortly'| site =='Acme')
+head(newdata)
+table(newdata$site)
+# scater plot using seven elements of grammer of graphic of three most visited site
+newdata %>% ggplot(aes(x=visits,y=orders,col="red" ))+geom_point()+
+    facet_wrap(~site)+ scale_x_continuous("visits")+geom_smooth(method = 'lm',col='blue')
+## Now I will separate the data from orders which sites have>500 order
+newdata1<-data %>% filter(site=='Acme')
+newdata %>% ggplot(aes(x=visits,y=orders ))+geom_point()+
+    facet_wrap(~site)+ scale_x_continuous("visits")
+newdata1<-data  %>% filter( site =='Pinnacle'| site =='Sortly'| site =='Acme',orders >500)
+newdata1 %>% ggplot(aes(x=visits,y=orders,col="red" ))+geom_point()+
+    facet_wrap(~site)+ scale_x_continuous("visits")+geom_smooth(method = 'lm',col='blue')
+# scater plot using seven elements of grammer of graphic of  most visited site vs order 
+newdata1 %>% ggplot(aes(x=visits,y=orders,col="red"))+geom_point()+
+    facet_wrap(~site)+ scale_x_continuous("visits") +ggtitle("Order vs site")+
+    scale_y_continuous("orders")+theme_dark()+geom_smooth(method = 'lm',col='red')
+# Univariative Plot(pie chart,histogram,bar chart)
+## Bar plot for site
+data %>% ggplot(aes(y=site,col="green"))+geom_bar(fill="green") + theme_classic()+
+    coord_flip()+ggtitle("vivewd site vs count")
+## Bar plot for day's
+data %>% ggplot(aes(y=day ))+geom_bar() + theme_bw()+
+    coord_flip()+ggtitle("Days Views")
+## Bar plot for gross sales
+newdata %>% ggplot(aes(x= gross_sales))+geom_histogram(binwidth = 10000,color='blue',alpha=0.8)+
+    facet_wrap(~site)+scale_x_continuous("Bar plot for gross sales",limits = c(0,50000))
+## Bar plot for new_customer
+newdata %>% ggplot(aes(y=new_customer ))+geom_bar() + theme_bw()+
+    coord_flip()+ggtitle("Bar plot for new customer")
+# Histogram for Orders
+newdata %>% ggplot(aes(x=  orders))+geom_histogram(binwidth = 10000,fill="green",color='red',alpha=0.8)+
+    facet_wrap(~site)+ggtitle(" Histogram for Orders")
+## Histogram for orders
+newdata %>% ggplot(aes(x= add_to_cart ))+geom_histogram(binwidth = 10000,fill="green",color='red',alpha=0.8)+
+    facet_wrap(~site)+ ggtitle(" add_to_cart")
+## Histogram for product_page_views
+newdata %>% ggplot(aes(x= product_page_views ))+geom_histogram(binwidth = 10000,fill="green",color='red',alpha=0.8)+
+    facet_wrap(~site)+ggtitle(" product_page_views")
+## Histogram for search_page_views
+newdata %>% ggplot(aes(x= search_page_views ))+geom_histogram(binwidth = 10000,fill="green",color='red',alpha=0.8)+
+    facet_wrap(~site)+ggtitle(" search_page_views")
+# Question 12
+plot(visits~orders, newdata,col="red")
+##   I will do some analysis which variable are mostely afftected to the visits of site
+## Linear model 
+model<-lm(visits~orders, newdata)
+summary(model)
+residuals(model)
+## For my linear model i got all probabilty leass than 0.05 so my independent variable is significant
+## Multi linear model 
+model2<-lm(visits~orders+ add_to_cart+platform , newdata)
+summary(model2)
+model3<-lm(visits~orders+ add_to_cart+gross_sales , newdata)
+summary(model3)
+## Non Linear analysis 
+model_non<-lm(visits~orders+I(orders^2), newdata)
+summary(model_non)
+## From table Coefficients probability are more than 95% confidence level so my model is correct
+model3<-lm(visits~orders+ add_to_cart+gross_sales , newdata)
+summary(model3)
+## Analysis of orders depending on the which variable 
+## Linear model 
+model<-lm(orders~visits, newdata)
+summary(model)
+## For my linear model i got all probabilty leass than 0.05 so my independent variable is significant
+## Multi linear model 
+model2<-lm(orders~visits+ add_to_cart+platform , newdata)
+summary(model2)
+model21<-lm(orders~visits+bounces+ add_to_cart+platform , newdata)
+summary(model21)
+model3<-lm(orders~visits+ add_to_cart+gross_sales , newdata)
+summary(model3)
+model4<-lm(orders~visits+ bounces+ add_to_cart+gross_sales , newdata)
+summary(model4)
+## Non Linear analysis 
+model_non<-lm(orders~visits+I(visits^2), newdata)
+summary(model_non)
+model_non<-lm(orders~visits+I(visits^2)+bounces*add_to_cart, newdata)
+summary(model_non)
+## From table Coefficients probability are more than 95% confidence level so my model is correct
+
+
+
