@@ -1,0 +1,23 @@
+# R-programming-Naive Bays 
+data<-read.table(file.choose(),header=T,sep="\t")
+head(data)
+str(data)
+m<-xtabs(~admit+rank,data)
+m
+chisq.test(m)
+data$admit<-as.factor(data$admit)
+data$rank<-as.factor(data$rank)
+set.seed(1234)
+ind<-sample(2,nrow(data),replace=T,prob = c(0.8,0.2))
+train_na<-data[ind==1,]
+test_na<-data[ind==2,]
+model<-naiveBayes(admit~.,data=train_na)
+model
+pre<-predict(model,newdata=test_na)
+tab<-table(pre,test_na$admit)
+acc<-sum(diag(tab))/(sum(tab))
+mis<-1-acc
+##predict new datas set
+newdata<-data[1:3,]
+pre2<-predict(model,newdata)
+
