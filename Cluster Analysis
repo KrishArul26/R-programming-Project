@@ -1,4 +1,4 @@
-# R-programming-Project
+
 # Cluster Analysis
 
 mydata <- read.csv(file.choose(),header=T)
