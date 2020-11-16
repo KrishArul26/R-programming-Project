@@ -1,0 +1,32 @@
+# Imbalance Data Set
+data <- read.csv(file.choose(), header = TRUE)
+head(data)
+str(data)
+data$admit <- as.factor(data$admit)
+summary(data)
+set.seed(1234)
+ind<-sample(2,nrow(data),prob = c(0.8,0.2),replace=T)
+train_data<-data[ind==1,]
+test_data<-data[ind==2,]
+library(gmodels)
+CrossTable(train_data$admit)
+table(train_data$admit)
+# Sampling Technique
+library(ROSE)
+over<-ovun.sample(admit~.,data=train_data,method = "over",N=446)$data
+
+
+# Random Forest Model 
+library(randomForest)
+rf1<-randomForest(admit~.,data=train_data,mtry=3,ntree=300,importance=T,proximity=T)
+rf2<-randomForest(admit~.,data=train_data,mtry=2,ntree=500,importance=T,proximity=T)
+rfover<-randomForest(admit~.,data=over,mtry=3,ntree=300,importance=T,proximity=T)
+ summary(rf)  
+ library(caret)
+ library(e1071)
+pre1<-predict(rf,newdata=test_data)
+cm1<-confusionMatrix(pre,test_data$admit,positive = '1')
+pre2<-predict(rf2,newdata=test_data)
+cm2<-confusionMatrix(pre2,test_data$admit,positive = '1')
+
+
