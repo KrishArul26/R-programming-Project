@@ -1,0 +1,16 @@
+# R-programming-Euclidean distance
+X1<-c(1,1,2,2,4,4,5,5)
+X2<-c(2,3,2,4,3,5,2,4)
+plot(X1,X2,pch=20,cex=2,col="red")
+category<-c(rep("A",4),rep("B",4))
+text(X1,X2,category,pos=4,col="blue")
+data<-data.frame(X1,X2,category)
+newdata<-data[,-3]
+newdata_cat<-data[,3]
+prd<-knn(newdata,c(3,3),cl=newdata_cat,k=3)
+points(3,3,col="green",pch=25)
+prd2<-knn(newdata,list(X1=3,X2=3),cl=newdata_cat,k=3)
+x<-c(2,3,4,8)
+y<-c(6,4,3,1)
+new<-data.frame(x,y)
+equlidiance<-sqrt((X1-3)^2+(X2-3)^2)
