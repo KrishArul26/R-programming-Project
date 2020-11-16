@@ -1,0 +1,62 @@
+# R-programming-Project
+data<-read.csv(file.choose(),header=T)
+head(data)
+str(data)
+data$admit<-as.factor(data$admit)
+str(data)
+ind<-sample(2,replace=T,nrow(data),prob = c(0.8,0.2))
+train<-data[ind==1,]
+test<-data[ind==2,]
+table(data$admit)
+## Logistic model
+model1<-glm(admit~.,data=train,family="binomial")
+model1
+pre<-predict(model1,newdata=train,type="response")
+pre1<-ifelse(pre>0.5,1,0)
+table(predicted=pre1,Actual=train$admit)
+vif(model1)
+cm1<-confusionMatrix(data=pre1,train$admit)
+summary(model1)
+## Decission Tree
+library(party)
+dtree1<-ctree(admit~.,data=train)
+pre3<-predict(dtree1,data=train)
+cm3<-confusionMatrix(data=pre3,train$admit)
+cm3
+tab<-table(predicted=pre3,Actual=train$admit)
+plot(dtree1)## Random Forest model
+library(randomForest)
+model2<-randomForest(admit~.,data,ntree=300,mtry=2,importance=T,proximity=T)
+plot(model2)
+summary(model2)
+attributes(model2)
+pre2<-predict(model2,newdata=train)
+cm2<-confusionMatrix(data=pre2,train$admit)
+cm2
+## Handling imbalce data set 
+library(ROSE)
+over<-ovun.sample(admit~.,data=train,method="over",N=438)$data
+class(over)
+head(over)
+table(over$admit)
+library(caret)
+library(e1071)
+model11<-glm(admit~.,data=over,family="binomial")
+model11
+pre11<-predict(model1,newdata=over,type="response")
+pre21<-ifelse(pre11>0.5,1,0)
+table(predicted=pre21,Actual=over$admit)
+vif(model1)
+cm12<-confusionMatrix(pre21,over$admit,positive ='1')
+## Cross validation for training data set 
+levels(data)<-c("no","yes")
+indc<-createDataPartition(data$admit,times = 1,p=0.8,list = F)
+train1<-data[indc,]
+test1<-data[-indc]
+#Specify the type of training method used for Flod CV 
+ctrlspeces<-trainControl(method ="repeatedcv",repeats=3,number = 10,savePredictions ="all",classProbs="T")
+## Create the model
+library(e1071)
+library(caret)
+cvmodel<-train(admit~.,method=glm,family="binomial",trcontrol="ctrlspeces",data=train1)
+
