@@ -1,0 +1,27 @@
+# R-programming-Logistic Regression 
+data<-read.delim(file.choose(),header=T,sep="\t")
+head(data)
+str(data)
+data$Diabet<-as.factor(data$Diabet)
+str(data)
+newdata<-data[,-1]
+data_train<-newdata[1:600,]
+data_test<-newdata[601:768,]
+mylgmodel<-glm(Diabet~NPG+PGL+DIA+TSF+INS+BMI+DPF+AGE,data_train,family="binomial",)
+mylgmodel
+summary(mylgmodel)
+newmylmodel<-glm(Diabet~NPG+PGL+BMI+DPF,family="binomial",data_train)
+summary(newmylmodel)
+predc<-predict(newmylmodel,newdata=data_test,type="response")
+head(predc)
+predc1<-ifelse(predc>0.5,1,0)
+accuracy<-table(predicted=predc1,Actual=data_test$Diabet)
+accuracy_per<-(sum(diag(accuracy))/sum(accuracy))*100
+accuracy_per
+predc2<-predict(newmylmodel,data_train,type="response")
+predc21<-ifelse(predc2>0.5,1,0)
+accuracy2<-table(predicted=predc21,Actual=data_train$Diabet)
+accuracy_per2<-(sum(diag(accuracy2))/sum(accuracy2))*100
+accuracy_per2
+pre_x<-predict(newmylmodel,x_pat,type="response")
+prednew<-predict(model,list(Age = 100, Number = 4,Start = 10),type="response")
