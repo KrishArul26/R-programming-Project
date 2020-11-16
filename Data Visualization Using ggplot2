@@ -1,0 +1,26 @@
+# R-programming-Data Visualization Using ggplot2
+mydata<-read.table(file.choose(),header=TRUE,sep=",")
+head(mydata)
+str(mydata)
+library(dplyr)
+library(ggplot2)
+library(ggExtra)
+dat<-mydata %>% filter(State=='CA'|State=='TX'|State=='FL')
+dat %>% ggplot(aes(x=lh,y=lc))+geom_point()+facet_wrap(~ State)+ggtitle('lh vs lc' )+geom_smooth(method = 'lm',col='red')+
+        scale_x_continuous("Labour Hours",limits = c(0,40))+ scale_y_continuous("Labours cost per hour in $",limits=c(0,4000))+
+                        theme_dark()
+
+### Univariative Plot(pie chart,histogram,bar chart)
+##Bar Plot
+mydata %>% ggplot(aes(x= State))+geom_bar() + theme_bw()+
+    coord_flip()
+dat1<-mydata %>% filter(State=='CA'| State=='TX'| State=='FL')
+dat1 %>% ggplot(aes(x=State, fill= State))+
+    geom_bar()
+dat2<- dat1 %>% filter(fm == '1' | fm == '2')
+dat2 %>% ggplot(aes(x=State))+ geom_bar()
+dat2 %>%  ggplot(aes(x=State, fill = State)) + geom_bar()+
+    facet_grid(.~fm)+ ggtitle('Failgure in top three states','Faigure months 1&2')
+dat1 %>% ggplot(aes(x= Mileage,fill='State')) + 
+    geom_histogram(binwidth = 5000,color='blue',alpha=0.8)+
+    facet_wrap(~State)
