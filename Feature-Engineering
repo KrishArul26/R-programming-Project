@@ -1,0 +1,126 @@
+# Feature-Engineering 
+data<-read.csv(file.choose(),header=T,stringsAsFactors=F)
+head(data)
+str(data)
+#Question 01
+#Original Number of column and raw
+dim(data)
+# raw = 1232, Coloumn= 171
+names(data)
+# Selected only three coloumns from original data set 
+newdata<-data[,c("educR","partyid","DTJB2020")]
+# Check our previous work
+head(newdata)
+# Understand the data 
+summary(newdata)
+table(newdata$educR)
+table(newdata$partyid)
+table(newdata$DTJB2020)
+# Question 2
+install.packages("dplyr")
+library(dplyr)
+# Filter the votes who's put voe to Trump or Biden 
+newdata1<-newdata %>% filter(DTJB2020=='Donald Trump and Mike Pence, the Republicans'|DTJB2020=='Joe Biden and Kamala (Kah-muh-la) Harris, the Democrats')
+head(newdata1)
+summary(newdata1)
+# Check is there any NA value in our new data set 
+sum(!(complete.cases(newdata1)))
+## after did  filterization  the data which raw related to Trump or Biden.
+# There is no mis1sing value in the data set
+newdata2<-newdata1 %>% filter(educR=='College degree'|educR=='Graduate-Professional degree'|educR=='High school or less'|educR=='Some college or associate degree')
+dim(newdata2)
+# After filterization there is 924raw and 3 coloumn
+#Categorized of educR variable
+# Question 3
+table_vote_choice_categories_edu<-table(newdata2$DTJB2020,newdata2$educR)
+table_vote_choice_categories_edu
+# From table we can understand 
+prop_table_vote_choice_categories_edu<-prop.table(table_vote_choice_categories_edu)
+prop_table_vote_choice_categories_edu
+# Round the value for three decimels
+round<-round(prop_table_vote_choice_categories_edu,3)
+round
+#Question4
+# From table we can compute all the value manually and do the 4th question
+# The proportion supporting Trump among voters with a college degree or higher
+total_supporting_Trump_collegeorhigher_degree<-138+58+131
+prop_total_supporting_Trump_collegeorhigher_degree<-total_supporting_Trump_collegeorhigher_degree/nrow(newdata2)
+round(prop_total_supporting_Trump_collegeorhigher_degree,3)
+#The proportion supporting Trump among voters with less than a college degree
+total_supporting_Trump_less_than_college_degree<-151
+prop_total_supporting_Trump_less_than_college_degree<-151/nrow(newdata2)
+round(prop_total_supporting_Trump_less_than_college_degree,3)
+# From the proportion of supporting Trump among voters with a college degree or highe greater than
+# The proportion supporting Trump among voters with less than a college degree. Here by we can decide;
+#Higher educiation pepole would like to Tramp rather than other candidate
+#Question 5
+# H0 : Both Proportion are Equal
+# H1: Both Proportion are not equal
+prop.test(c(327,151),c(924,924))
+# P value is 2.2e-16, It less than 0.05 So, we could reject Null Hypothesis 
+#Conclusion : Population proportion are not equal
+#Question 6
+# Compute the alternative standard error estimate
+proportion_of_the_full_sample_supporting_Trump<-(138+58+151+131)/nrow(newdata2)
+proportion_of_the_full_sample_supporting_Trump
+p<-proportion_of_the_full_sample_supporting_Trump
+alternative_standard_error_estimater<-((2*p*(1-p))/924)^0.5
+SE<-alternative_standard_error_estimater
+SE
+z = (p1 - p2 ) / SE
+p1<-0.354
+p2<-0.142
+#z=(p1-p2)/SE
+z
+Probability_using_alternative_standard_error_estimate<-pnorm(z)
+Probability_using_alternative_standard_error_estimate
+#New probability is zero
+#Question7
+#relationship between education and party
+relation_education_party<-table(newdata2$partyid,newdata2$educR)
+relation_education_party
+# The average party identification among voters with a college degree or higher. let's take as p_eduparty
+p_eduparty<-(sum(relation_education_party)-(67+30+22+29+112))/sum(relation_education_party)
+round(p_eduparty,3)
+# Average among voters without a college degree.Lets take p_less_degree
+p_less_degree<-(67+30+22+29+112)/sum(relation_education_party)
+round(p_less_degree,3)
+# Apply proportion Test
+#H0=Both proportion are equal
+#H1=Both proportion are not equal
+# party identification among voters with a college degree or higher.
+A1<-c(74,30,25,40,89,80,20,10,8,46,60,42,10,37,93)
+round(mean(A1),3)
+#Average among voters without a college degree
+A2<-c(67,30,22,29,112)
+round(mean(A2),3)
+#Average among voters without a college degree is greater than party identification among 
+#voters with a college degree or higher 
+#Question8
+#Do the two sample T testing for each A1 and A2
+#let take
+#H0: There is no difference mean of A1 and A2
+#H1: There is  difference mean of A1 and A2
+t.test(A1,A2)
+#p-value = 0.6915 .Its greater than 0.05 So, H0 is not rejected and 
+#other way Both Mean are same according to t test 
+#question number 9
+Average<-mean(A1)
+Average<-mean(A2)
+SD_A1<-sd(A1)
+SD_A1
+SD_A2<-sd(A2)
+SD_A2
+#Find the standard Error
+SE <((((SD_A1)^2)/length(A1))+(((SD_A2)^2)/length(A2)))^0.5
+SE
+#Find the difference of mean
+mean_diff<-mean(A2)-mean(A1)
+length(A1)
+length(A2)
+T<-(mean_diff)/(SE)
+T
+#H0: Means are same
+#H1: Meand are difference
+#Probability of T is 0.6510. It would be greater than 0.05 So H0 is not rejected
+So, Means are same for A1 and A2
