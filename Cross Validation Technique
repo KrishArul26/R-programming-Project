@@ -1,0 +1,59 @@
+# R-Cross Validation Technique
+mydata <- read.table(file.choose(),header=T,sep=",")
+head(mydata)
+str(mydata)
+dim(mydata)
+d<-mydata[,-1]
+head(d)
+d$Buy<-as.factor(d$Buy)
+str(d)
+library(gmodels)
+CrossTable(d$Buy)
+library(psych)
+library(party)
+set.seed(1234)
+data<-d
+levels(data$Buy)<-c("No","Yes")
+index<-createDataPartition(data$Buy,p=0.8,list=FALSE)
+head(index)
+traincv<-data[index,]
+testcv<-data[-index,]
+table(balance_traincv$Buy)
+## Sampling technique
+library(ROSE)
+library(caret)
+balance_traincv<-ovun.sample(Buy~.,data=traincv,method="over",N=6176)$data
+
+splitRule<-trainControl(method="repeatedcv",repeats=3,number=10,classProbs = TRUE, summaryFunction = twoClassSummary)
+gbmModel<-train(Buy~.,data = balance_traincv, trControl=splitRule, method = "gbm",metric = "ROC",
+                preProc = c("center", "scale"))
+pred<-predict(gbmModel,newdata=testcv,positive="Yes")
+table(pred,testcv$Buy)
+confusionMatrix(pred,testcv$Buy)
+#Under Balance DAta
+under_balance_traincv<-ovun.sample(Buy~.,data=traincv,method="under",N=496)$data
+
+splitRule<-trainControl(method="repeatedcv",repeats=3,number=10,classProbs = TRUE, summaryFunction = twoClassSummary)
+gbmModel2<-train(Buy~.,data = under_balance_traincv, trControl=splitRule, method = "gbm",metric = "ROC",
+                preProc = c("center", "scale"))
+pred<-predict(gbmModel1,newdata=testcv)
+table(pred,testcv$Buy)
+confusionMatrix(pred,testcv$Buy)
+##Both balance data 
+both_traincv<-ovun.sample(Buy~.,data=traincv,method="both",N=3287)$data
+table(traincv$Buy)
+gbmModelboth<-train(Buy~.,data = both_traincv, trControl=splitRule, method = "gbm",
+                    preProc = c("center", "scale"),metric = "ROC")
+predboth<-predict(gbmModelboth,newdata=testcv)
+confusionMatrix(predboth,testcv$Buy)
+
+##XG Boosting
+boost_spec<-boost_tree(mode="classification",tree_depth=1,
+                       trees=1000,learn_rate=0,001) %>% set_engine("xgboost")
+mod<-fit(boost_spec,Buy~.,data=traincv)
+pre1<-predict(mod,newdata=testcv[,-86])
+cmcv1<-confusionMatrix(pre1,testcv$Buy)
+str(d$Buy)
+data$V71
+table(data$V71)
+
